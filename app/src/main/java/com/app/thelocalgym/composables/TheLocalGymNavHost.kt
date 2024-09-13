@@ -1,5 +1,8 @@
 package com.app.thelocalgym.composables
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -16,7 +19,12 @@ import java.util.UUID
 @Composable
 fun TheLocalGymNavHost() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Routes.HOME.name) {
+    NavHost(
+        navController = navController,
+        startDestination = Routes.HOME.name,
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None },
+        ) {
         composable(route = Routes.HOME.name) {
             HomeScreen(
                 onWorkoutsClicked = {
@@ -33,6 +41,7 @@ fun TheLocalGymNavHost() {
                 onWorkoutClicked = { workoutId ->
                     navController.navigate(Routes.WORKOUT_DETAILS.name + "/$workoutId")
                 },
+                navigateBack = navController::popBackStack
             )
         }
         composable(
@@ -43,7 +52,13 @@ fun TheLocalGymNavHost() {
         ) {
             val args = it.arguments?.getString("workoutId")
             val workout = MockDataLayer.workouts.find { workout -> workout.id == args }
-            WorkoutDetailsScreen(workout)
+            WorkoutDetailsScreen(
+                workout = workout,
+                navigateBack = navController::popBackStack
+                )
+        }
+        composable(route = Routes.EXERCISES.name) {
+            Text(text = "Hello")
         }
     }
 }
