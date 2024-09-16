@@ -24,7 +24,7 @@ fun TheLocalGymNavHost() {
         startDestination = Routes.HOME.name,
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None },
-        ) {
+    ) {
         composable(route = Routes.HOME.name) {
             HomeScreen(
                 onWorkoutsClicked = {
@@ -55,7 +55,7 @@ fun TheLocalGymNavHost() {
             WorkoutDetailsScreen(
                 workout = workout,
                 navigateBack = navController::popBackStack
-                )
+            )
         }
         composable(route = Routes.EXERCISES.name) {
             Text(text = "Hello")
@@ -76,31 +76,31 @@ object MockDataLayer {
             id = UUID.randomUUID().toString(),
             name = "Push 1",
             exercises = listOf(
-                Exercise(name = "Incline Press", sets = 3, reps = 10),
-                Exercise(name = "Upright Row", sets = 3, reps = 15),
-                Exercise(name = "Triceps overhead", sets = 2, reps = 10),
-                Exercise(name = "Triceps push down", sets = 2, reps = 10),
-                Exercise(name = "Chest press", sets = 3, reps = 10),
-                Exercise(name = "Lat raises", sets = 3, reps = 15),
+                Exercise(name = "Incline Press", weight = 20, sets = 3, reps = 10),
+                Exercise(name = "Upright Row", weight = 20, sets = 3, reps = 15),
+                Exercise(name = "Triceps overhead", weight = 20, sets = 2, reps = 10),
+                Exercise(name = "Triceps push down", weight = 20, sets = 2, reps = 10),
+                Exercise(name = "Chest press", weight = 20, sets = 3, reps = 10),
+                Exercise(name = "Lat raises", weight = 20, sets = 3, reps = 15),
             )
         ),
         Workout(
             id = UUID.randomUUID().toString(),
             name = "Pull 1",
             exercises = listOf(
-                Exercise(name = "Seated Row", sets = 3, reps = 10),
-                Exercise(name = "Biceps curl", sets = 3, reps = 10),
-                Exercise(name = "Lat pull down", sets = 3, reps = 10),
-                Exercise(name = "Rear delt fly", sets = 3, reps = 15),
+                Exercise(name = "Seated Row", weight = 20, sets = 3, reps = 10),
+                Exercise(name = "Biceps curl", weight = 20, sets = 3, reps = 10),
+                Exercise(name = "Lat pull down", weight = 20, sets = 3, reps = 10),
+                Exercise(name = "Rear delt fly", weight = 20, sets = 3, reps = 15),
             )
         ),
         Workout(
             id = UUID.randomUUID().toString(),
             name = "Leg 1",
             exercises = listOf(
-                Exercise(name = "Squat", sets = 3, reps = 5),
-                Exercise(name = "Split squats", sets = 3, reps = 10),
-                Exercise(name = "Calf raises", sets = 4, reps = 10),
+                Exercise(name = "Squat", weight = 20, sets = 3, reps = 5),
+                Exercise(name = "Split squats", weight = 20, sets = 3, reps = 10),
+                Exercise(name = "Calf raises", weight = 20, sets = 4, reps = 10),
             )
         ),
     )

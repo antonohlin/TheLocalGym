@@ -20,7 +20,12 @@ fun WorkoutsScreen(
     navigateBack: () -> Unit,
 ) {
     Scaffold(
-        topBar = { TopBar(onLeftClick = navigateBack) }
+        topBar = {
+            TopBar(
+                showLeftIcon = true,
+                onLeftClick = navigateBack,
+                )
+        }
     ) { padding ->
         LazyColumn(
             modifier = Modifier

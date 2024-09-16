@@ -1,11 +1,10 @@
 package com.app.thelocalgym.composables
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,21 +16,28 @@ fun ClickableListItem(
     text: String,
     onClick: () -> Unit,
 ) {
-    Column {
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() }) {
-            Text(text = text, modifier = Modifier.padding(10.dp))
-        }
-        Divider()
+    Button(
+        onClick = { onClick() },
+        shape = RoundedCornerShape(10),
+        modifier = Modifier
+            .padding(vertical = 2.dp)
+            .padding(horizontal = 10.dp),
+    ) {
+        Text(text = text, modifier = Modifier.fillMaxWidth())
     }
 }
 
 @Composable
 @Preview(showBackground = true)
 private fun ClickableListItemPreview() {
-    ClickableListItem(
-        text = "Sample Text",
-        onClick = {}
-    )
+    Column {
+        ClickableListItem(
+            text = "Sample Text",
+            onClick = {}
+        )
+        ClickableListItem(
+            text = "Sample Text",
+            onClick = {}
+        )
+    }
 }
