@@ -8,6 +8,7 @@ data class Workout(
 
 data class Exercise(
     val name: String,
+    val weight: Int,
     val sets: Int,
     val reps: Int,
 )
