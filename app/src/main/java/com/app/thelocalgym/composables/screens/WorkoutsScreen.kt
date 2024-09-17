@@ -12,6 +12,7 @@ import com.app.thelocalgym.Workout
 import com.app.thelocalgym.composables.ClickableListItem
 import com.app.thelocalgym.composables.MockDataLayer
 import com.app.thelocalgym.composables.TopBar
+import com.app.thelocalgym.composables.VerticalSpacer
 
 @Composable
 fun WorkoutsScreen(
@@ -24,7 +25,7 @@ fun WorkoutsScreen(
             TopBar(
                 showLeftIcon = true,
                 onLeftClick = navigateBack,
-                )
+            )
         }
     ) { padding ->
         LazyColumn(
@@ -32,6 +33,9 @@ fun WorkoutsScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
+            item {
+                VerticalSpacer(height = 5)
+            }
             items(workouts) {
                 ClickableListItem(text = it.name, onClick = { onWorkoutClicked(it.id) })
             }
