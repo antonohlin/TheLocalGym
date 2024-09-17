@@ -20,9 +20,14 @@ import com.app.thelocalgym.composables.TopBar
 fun WorkoutDetailsScreen(
     workout: Workout?,
     navigateBack: () -> Unit,
-    ) {
+) {
     Scaffold(
-        topBar = { TopBar(onLeftClick = navigateBack) }
+        topBar = {
+            TopBar(
+                onLeftClick = navigateBack,
+                showLeftIcon = true,
+            )
+        }
     ) { padding ->
         workout?.let {
             LazyColumn(modifier = Modifier.padding(padding)) {

@@ -2,9 +2,10 @@ package com.app.thelocalgym.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -33,31 +34,34 @@ fun TopBar(
             .background(MaterialTheme.colorScheme.primary)
             .padding(horizontal = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        if (showLeftIcon) {
+        Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.TopStart) {
+            if (showLeftIcon) {
+                Text( // TODO: Replace with icon
+                    "Back",
+                    modifier = Modifier
+                        .clickable { onLeftClick() },
+                    color = Color.White,
+                )
+            }
+        }
+        Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
             Text(
-                // TODO: Replace with icon
-                "Back",
-                modifier = Modifier
-                    .clickable { onLeftClick() },
+                text = "The Local Gym",
+                fontWeight = FontWeight.Bold, fontStyle = FontStyle.Italic,
                 color = Color.White,
             )
         }
-        Spacer(modifier = Modifier.weight(1f))
-        Text( // TODO: Always centered
-            text = "The Local Gym",
-            fontWeight = FontWeight.Bold, fontStyle = FontStyle.Italic,
-            color = Color.White
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        if (showRightIcon) {
-            Text(
-                // TODO: Replace with icon
-                "Other",
-                modifier = Modifier
-                    .clickable { onRightClick() },
-                color = Color.White
-            )
+        Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.TopEnd) {
+            if (showRightIcon) {
+                Text( // TODO: Replace with icon
+                    "Other",
+                    modifier = Modifier
+                        .clickable { onRightClick() },
+                    color = Color.White
+                )
+            }
         }
     }
 }
