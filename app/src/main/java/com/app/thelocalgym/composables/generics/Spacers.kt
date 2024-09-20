@@ -1,4 +1,4 @@
-package com.app.thelocalgym.composables
+package com.app.thelocalgym.composables.generics
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height

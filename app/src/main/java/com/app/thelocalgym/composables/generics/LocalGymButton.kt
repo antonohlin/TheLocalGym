@@ -1,4 +1,4 @@
-package com.app.thelocalgym.composables
+package com.app.thelocalgym.composables.generics
 
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
