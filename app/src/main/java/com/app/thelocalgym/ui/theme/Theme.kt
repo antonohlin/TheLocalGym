@@ -45,6 +45,7 @@ fun TheLocalGymTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
+        // TODO: Disable dynamicColor and set Light/DarkColorScheme
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)

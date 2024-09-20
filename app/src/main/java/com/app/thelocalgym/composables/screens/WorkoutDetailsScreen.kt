@@ -39,7 +39,7 @@ fun WorkoutDetailsScreen(
                         fontSize = 16.sp
                     )
                 }
-                items(it.exercises) {
+                items(items = it.exercises, key = { it.id }) {
                     ExerciseListItem(exercise = it)
                 }
             }
