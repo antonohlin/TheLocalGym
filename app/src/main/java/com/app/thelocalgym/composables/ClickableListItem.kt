@@ -16,15 +16,16 @@ fun ClickableListItem(
     text: String,
     onClick: () -> Unit,
 ) {
-    Button(
-        onClick = { onClick() },
-        shape = RoundedCornerShape(10),
+    LocalGymButton(
         modifier = Modifier
             .padding(vertical = 2.dp)
-            .padding(horizontal = 10.dp),
-    ) {
-        Text(text = text, modifier = Modifier.fillMaxWidth())
-    }
+            .padding(horizontal = 10.dp)
+            .fillMaxWidth(),
+        onClick = onClick,
+        shape = RoundedCornerShape(10),
+        text = text,
+        type = ButtonType.PRIMARY
+    )
 }
 
 @Composable

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,7 +38,7 @@ fun ExerciseListItem(
         modifier = Modifier
             .padding(vertical = 4.dp)
             .padding(horizontal = 8.dp)
-            .background(Color(0xFFd2edfc), RoundedCornerShape(5))
+            .background(color = MaterialTheme.colorScheme.surface, RoundedCornerShape(5))
 
     ) {
         Column {
