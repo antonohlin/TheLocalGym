@@ -27,6 +27,9 @@ fun TheLocalGymNavHost() {
     ) {
         composable(route = Routes.HOME.name) {
             HomeScreen(
+                onProgramsClicked = {
+                    navController.navigate(Routes.PROGRAMS.name)
+                },
                 onWorkoutsClicked = {
                     navController.navigate(Routes.WORKOUTS.name)
                 },
@@ -35,6 +38,7 @@ fun TheLocalGymNavHost() {
                 },
             )
         }
+
         composable(route = Routes.WORKOUTS.name) {
             WorkoutsScreen(
                 workouts = MockDataLayer.workouts,
@@ -44,6 +48,7 @@ fun TheLocalGymNavHost() {
                 navigateBack = navController::popBackStack
             )
         }
+
         composable(
             route = Routes.WORKOUT_DETAILS.name + "/{workoutId}",
             arguments = listOf(
@@ -57,7 +62,12 @@ fun TheLocalGymNavHost() {
                 navigateBack = navController::popBackStack
             )
         }
+
         composable(route = Routes.EXERCISES.name) {
+            Text(text = "Hello")
+        }
+
+        composable(route = Routes.PROGRAMS.name) {
             Text(text = "Hello")
         }
     }
@@ -66,41 +76,42 @@ fun TheLocalGymNavHost() {
 private enum class Routes {
     HOME,
     WORKOUTS,
+    PROGRAMS,
     WORKOUT_DETAILS,
     EXERCISES,
 }
 
-object MockDataLayer {
+object MockDataLayer { // TODO: Create repository and mock getters and setters
     val workouts = listOf(
         Workout(
             id = UUID.randomUUID().toString(),
             name = "Push 1",
             exercises = listOf(
-                Exercise(name = "Incline Press", weight = 20, sets = 3, reps = 10),
-                Exercise(name = "Upright Row", weight = 20, sets = 3, reps = 15),
-                Exercise(name = "Triceps overhead", weight = 20, sets = 2, reps = 10),
-                Exercise(name = "Triceps push down", weight = 20, sets = 2, reps = 10),
-                Exercise(name = "Chest press", weight = 20, sets = 3, reps = 10),
-                Exercise(name = "Lat raises", weight = 20, sets = 3, reps = 15),
+                Exercise(id = UUID.randomUUID().toString(), name = "Incline Press", weight = 20, sets = 3, reps = 10),
+                Exercise(id = UUID.randomUUID().toString(), name = "Upright Row", weight = 20, sets = 3, reps = 15),
+                Exercise(id = UUID.randomUUID().toString(), name = "Triceps overhead", weight = 20, sets = 2, reps = 10),
+                Exercise(id = UUID.randomUUID().toString(), name = "Triceps push down", weight = 20, sets = 2, reps = 10),
+                Exercise(id = UUID.randomUUID().toString(), name = "Chest press", weight = 20, sets = 3, reps = 10),
+                Exercise(id = UUID.randomUUID().toString(), name = "Lat raises", weight = 20, sets = 3, reps = 15),
             )
         ),
         Workout(
             id = UUID.randomUUID().toString(),
             name = "Pull 1",
             exercises = listOf(
-                Exercise(name = "Seated Row", weight = 20, sets = 3, reps = 10),
-                Exercise(name = "Biceps curl", weight = 20, sets = 3, reps = 10),
-                Exercise(name = "Lat pull down", weight = 20, sets = 3, reps = 10),
-                Exercise(name = "Rear delt fly", weight = 20, sets = 3, reps = 15),
+                Exercise(id = UUID.randomUUID().toString(), name = "Seated Row", weight = 20, sets = 3, reps = 10),
+                Exercise(id = UUID.randomUUID().toString(), name = "Biceps curl", weight = 20, sets = 3, reps = 10),
+                Exercise(id = UUID.randomUUID().toString(), name = "Lat pull down", weight = 20, sets = 3, reps = 10),
+                Exercise(id = UUID.randomUUID().toString(), name = "Rear delt fly", weight = 20, sets = 3, reps = 15),
             )
         ),
         Workout(
             id = UUID.randomUUID().toString(),
             name = "Leg 1",
             exercises = listOf(
-                Exercise(name = "Squat", weight = 20, sets = 3, reps = 5),
-                Exercise(name = "Split squats", weight = 20, sets = 3, reps = 10),
-                Exercise(name = "Calf raises", weight = 20, sets = 4, reps = 10),
+                Exercise(id = UUID.randomUUID().toString(), name = "Squat", weight = 20, sets = 3, reps = 5),
+                Exercise(id = UUID.randomUUID().toString(), name = "Split squats", weight = 20, sets = 3, reps = 10),
+                Exercise(id = UUID.randomUUID().toString(), name = "Calf raises", weight = 20, sets = 4, reps = 10),
             )
         ),
     )

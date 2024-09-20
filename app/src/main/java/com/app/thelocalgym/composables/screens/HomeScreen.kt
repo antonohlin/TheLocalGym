@@ -1,20 +1,18 @@
 package com.app.thelocalgym.composables.screens
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.app.thelocalgym.composables.ClickableListItem
 import com.app.thelocalgym.composables.TopBar
 import com.app.thelocalgym.composables.VerticalSpacer
 
 @Composable
 fun HomeScreen(
+    onProgramsClicked: () -> Unit,
     onWorkoutsClicked: () -> Unit,
     onExercisesClicked: () -> Unit,
 ) {
@@ -24,7 +22,8 @@ fun HomeScreen(
         }
     ) { padding ->
         Column(modifier = Modifier.padding(padding)) {
-            VerticalSpacer(height = 5)
+            VerticalSpacer(height = 5) // TODO: Add Icon at start/end?
+            ClickableListItem("Programs", onProgramsClicked)
             ClickableListItem("Workouts", onWorkoutsClicked)
             ClickableListItem("Exercises", onExercisesClicked)
         }
@@ -35,6 +34,7 @@ fun HomeScreen(
 @Preview(showBackground = true, showSystemUi = true)
 private fun HomeScreenPreview() {
     HomeScreen(
+        onProgramsClicked = {},
         onWorkoutsClicked = {},
         onExercisesClicked = {},
     )
