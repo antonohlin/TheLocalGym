@@ -6,9 +6,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.app.thelocalgym.composables.ClickableListItem
-import com.app.thelocalgym.composables.TopBar
-import com.app.thelocalgym.composables.VerticalSpacer
+import com.app.thelocalgym.composables.generics.ClickableListItem
+import com.app.thelocalgym.composables.generics.TopBar
+import com.app.thelocalgym.composables.generics.VerticalSpacer
 
 @Composable
 fun HomeScreen(
