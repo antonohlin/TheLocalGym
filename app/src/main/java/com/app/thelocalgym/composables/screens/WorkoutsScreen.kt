@@ -36,7 +36,7 @@ fun WorkoutsScreen(
             item {
                 VerticalSpacer(height = 5)
             }
-            items(workouts) {
+            items(items = workouts, key = { it.id }) {
                 ClickableListItem(text = it.name, onClick = { onWorkoutClicked(it.id) })
             }
         }
