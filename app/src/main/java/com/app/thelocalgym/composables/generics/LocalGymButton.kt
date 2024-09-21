@@ -1,12 +1,19 @@
 package com.app.thelocalgym.composables.generics
 
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun LocalGymButton(
@@ -15,7 +22,8 @@ fun LocalGymButton(
     shape: Shape = ButtonDefaults.shape,
     enabled: Boolean = true,
     onClick: () -> Unit = {},
-    type: ButtonType
+    type: ButtonType,
+    icon: ImageVector? = null,
 ) {
     Button(
         modifier = modifier,
@@ -45,8 +53,14 @@ fun LocalGymButton(
             }
         }
     ) {
-        text?.let {
-            Text(text = text)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            text?.let {
+                Text(text = text)
+            }
+            HorizontalSpacer(width = 10)
+            icon?.let {
+                Icon(imageVector = icon, contentDescription = "Button icon")
+            }
         }
     }
 }
@@ -55,4 +69,14 @@ enum class ButtonType {
     PRIMARY,
     SECONDARY,
     TERTIARY
+}
+
+@Preview
+@Composable
+private fun LocalGymButtonPreview() {
+    LocalGymButton(
+        text = "Click me!",
+        type = ButtonType.PRIMARY,
+        icon = Icons.Default.AddCircle
+    )
 }

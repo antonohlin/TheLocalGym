@@ -2,6 +2,10 @@ package com.app.thelocalgym.composables.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -22,10 +26,10 @@ fun HomeScreen(
         }
     ) { padding ->
         Column(modifier = Modifier.padding(padding)) {
-            VerticalSpacer(height = 5) // TODO: Add Icon at start/end?
-            ClickableListItem("Programs", onProgramsClicked)
-            ClickableListItem("Workouts", onWorkoutsClicked)
-            ClickableListItem("Exercises", onExercisesClicked)
+            VerticalSpacer(height = 5)
+            ClickableListItem("Programs", onProgramsClicked, Icons.Default.DateRange)
+            ClickableListItem("Workouts", onWorkoutsClicked, Icons.Default.Person) // TODO: Find cooler icons...
+            ClickableListItem("Exercises", onExercisesClicked, Icons.Default.List)
         }
     }
 }

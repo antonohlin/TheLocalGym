@@ -4,8 +4,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.List
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -13,6 +16,7 @@ import androidx.compose.ui.unit.dp
 fun ClickableListItem(
     text: String,
     onClick: () -> Unit,
+    icon: ImageVector? = null
 ) {
     LocalGymButton(
         modifier = Modifier
@@ -22,7 +26,8 @@ fun ClickableListItem(
         onClick = onClick,
         shape = RoundedCornerShape(10),
         text = text,
-        type = ButtonType.PRIMARY
+        type = ButtonType.PRIMARY,
+        icon = icon,
     )
 }
 
@@ -36,7 +41,8 @@ private fun ClickableListItemPreview() {
         )
         ClickableListItem(
             text = "Sample Text",
-            onClick = {}
+            onClick = {},
+            icon = Icons.Default.List
         )
     }
 }
