@@ -11,13 +11,17 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -69,7 +73,7 @@ fun ExerciseListItem(
             ) { focusManager.clearFocus() }
     ) {
         Column(modifier = Modifier.padding(6.dp)) {
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                 Text(
                     text = exercise.name,
                     fontSize = 16.sp,
@@ -82,27 +86,46 @@ fun ExerciseListItem(
             }
             Column {
                 for (i in 1..sets) {
+                    var setCompleted by remember { // TODO: Where should this live?!
+                        mutableStateOf(false)
+                    }
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 5.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
+                        horizontalArrangement = Arrangement.SpaceEvenly,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(text = "Set:")
-                            Text(text = "$i")
+                            Text(text = "Set:", fontSize = 12.sp)
+                            Text(text = "$i", fontSize = 12.sp)
                         }
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(text = "RPE:")
-                            Text(text = "8")
+                            Text(text = "RPE:", fontSize = 12.sp)
+                            Text(text = "8", fontSize = 12.sp)
                         }
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(text = "Range:")
-                            Text(text = "5-8")
+                            Text(text = "Range:", fontSize = 12.sp)
+                            Text(text = "5-8", fontSize = 12.sp)
                         }
                         ExerciseTextField(exercise.weight, "weight")
                         ExerciseTextField(exercise.reps, "reps")
+                        Icon(
+                            modifier = Modifier
+                                .padding(top = 15.dp)
+                                .size(20.dp)
+                                .clickable(
+                                    indication = null,
+                                    interactionSource = interActionSource,
+                                ) { setCompleted = !setCompleted },
+                            imageVector = Icons.Default.CheckCircle,
+                            contentDescription = "checkCircle",
+                            tint = if (setCompleted) {
+                                MaterialTheme.colorScheme.primary
+                            } else {
+                                Color.LightGray
+                            }
+                        )
                     }
                 }
             }
@@ -119,7 +142,7 @@ private fun SetsDropDown(
         mutableStateOf(false)
     }
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Text("Sets: ")
+        Text(text = "Sets: ", fontSize = 12.sp)
         Box(
             modifier = Modifier
                 .background(Color.White)
@@ -133,10 +156,14 @@ private fun SetsDropDown(
         ) {
             Text(
                 text = selectedSetsRange.toString(),
-                modifier = Modifier
-                    .padding(5.dp)
+                modifier = Modifier.padding(5.dp),
+                fontSize = 12.sp,
             )
-            DropdownMenu(expanded = showSetsDropDown, onDismissRequest = { showSetsDropDown = false }) {
+            DropdownMenu(
+                modifier = Modifier.width(70.dp),
+                expanded = showSetsDropDown,
+                onDismissRequest = { showSetsDropDown = false }
+            ) {
                 for (i in 1..5) {
                     DropdownMenuItem(
                         text = {
@@ -167,7 +194,11 @@ private fun ExerciseTextField(
     }
 
     Column {
-        Text(text = title.plus(":"), modifier = Modifier.padding(bottom = 1.dp))
+        Text(
+            text = title.plus(":"),
+            modifier = Modifier.padding(bottom = 1.dp),
+            fontSize = 12.sp,
+        )
         Box(
             modifier = Modifier
                 .background(Color.White)
@@ -184,8 +215,8 @@ private fun ExerciseTextField(
         ) {
             BasicTextField(
                 modifier = Modifier
-                    .padding(5.dp)
-                    .width(75.dp)
+                    .padding(2.dp)
+                    .width(40.dp)
                     .height(20.dp)
                     .onFocusChanged { focusState ->
                         isTextFieldFocused = focusState.isFocused
@@ -205,6 +236,8 @@ private fun ExerciseTextField(
 private fun ExerciseListItemPreview() {
     Column {
         ExerciseListItem(exercise = MockDataLayer.workouts.first().exercises.first())
-        ExerciseListItem(exercise = MockDataLayer.workouts.first().exercises.first().copy(reps = 1234, sets = 2))
+        ExerciseListItem(
+            exercise = MockDataLayer.workouts.first().exercises.first().copy(weight = 888, reps = 123, sets = 2)
+        )
     }
 }
