@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.thelocalgym.Exercise
 import com.app.thelocalgym.composables.MockDataLayer
+import com.app.thelocalgym.ui.theme.lightBlue
 
 @Composable
 fun ExerciseListItem(
@@ -50,9 +51,19 @@ fun ExerciseListItem(
     var sets by remember {
         mutableIntStateOf(exercise.sets)
     }
+    var exerciseCompleted by remember {
+        mutableStateOf(false)
+    }
+    var completedSets by remember {
+        mutableIntStateOf(0)
+    }
 
-    fun setSets(value: Int) { // TODO: Dummy data func, remove. Prolly the above variable to in favour of flow to comp
+    fun setSets(value: Int) { // TODO: Dummy data func, remove. Prolly the above variable too in favour of flow to comp
         sets = value
+        if (completedSets > value) {
+            completedSets = value
+        }
+        exerciseCompleted = completedSets == sets
     }
 
     val focusManager = LocalFocusManager.current
@@ -64,7 +75,11 @@ fun ExerciseListItem(
             .padding(vertical = 4.dp)
             .padding(horizontal = 8.dp)
             .background(
-                color = MaterialTheme.colorScheme.surface,
+                color = if (exerciseCompleted) {
+                    lightBlue
+                } else {
+                    MaterialTheme.colorScheme.surface
+                },
                 RoundedCornerShape(1)
             )
             .clickable(
@@ -117,10 +132,21 @@ fun ExerciseListItem(
                                 .clickable(
                                     indication = null,
                                     interactionSource = interActionSource,
-                                ) { setCompleted = !setCompleted },
+                                ) {
+                                    setCompleted = !setCompleted
+                                    if (setCompleted) {
+                                        completedSets++
+                                        if (completedSets == sets) {
+                                            exerciseCompleted = true
+                                        }
+                                    } else {
+                                        completedSets--
+                                        exerciseCompleted = false
+                                    }
+                                },
                             imageVector = Icons.Default.CheckCircle,
                             contentDescription = "checkCircle",
-                            tint = if (setCompleted) {
+                            tint = if (setCompleted || exerciseCompleted) {
                                 MaterialTheme.colorScheme.primary
                             } else {
                                 Color.LightGray
