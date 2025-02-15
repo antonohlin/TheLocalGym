@@ -11,6 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.app.thelocalgym.Exercise
 import com.app.thelocalgym.Workout
 import com.app.thelocalgym.composables.MockDataLayer
 import com.app.thelocalgym.composables.generics.ExerciseListItem
@@ -18,8 +19,9 @@ import com.app.thelocalgym.composables.generics.TopBar
 
 @Composable
 fun WorkoutDetailsScreen(
-    workout: Workout?,
+    workout: Workout,
     navigateBack: () -> Unit,
+    setSets: (Exercise, Int) -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -29,19 +31,17 @@ fun WorkoutDetailsScreen(
             )
         }
     ) { padding ->
-        workout?.let {
-            LazyColumn(modifier = Modifier.padding(padding)) {
-                item {
-                    Text(
-                        text = it.name,
-                        modifier = Modifier.padding(10.dp),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp
-                    )
-                }
-                items(items = it.exercises, key = { it.id }) {
-                    ExerciseListItem(exercise = it)
-                }
+        LazyColumn(modifier = Modifier.padding(padding)) {
+            item {
+                Text(
+                    text = workout.name,
+                    modifier = Modifier.padding(10.dp),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
+            }
+            items(items = workout.exercises, key = { it.id }) {
+                ExerciseListItem(exercise = it, setSets)
             }
         }
     }
@@ -53,5 +53,6 @@ fun WorkoutDetailsScreenPreview() {
     WorkoutDetailsScreen(
         MockDataLayer.workouts.first(),
         navigateBack = {},
+        setSets = {_,_ ->}
     )
 }

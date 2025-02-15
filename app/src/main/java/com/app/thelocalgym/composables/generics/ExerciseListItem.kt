@@ -1,5 +1,6 @@
 package com.app.thelocalgym.composables.generics
 
+import android.util.Range
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -41,30 +42,31 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.thelocalgym.Exercise
+import com.app.thelocalgym.WorkoutSet
 import com.app.thelocalgym.composables.MockDataLayer
 import com.app.thelocalgym.ui.theme.lightBlue
+import java.util.UUID
 
 @Composable
 fun ExerciseListItem(
     exercise: Exercise,
+    setSets: (Exercise, Int) -> Unit,
 ) {
-    var sets by remember {
-        mutableIntStateOf(exercise.sets)
-    }
-    var exerciseCompleted by remember {
-        mutableStateOf(false)
-    }
     var completedSets by remember {
         mutableIntStateOf(0)
     }
 
-    fun setSets(value: Int) { // TODO: Dummy data func, remove. Prolly the above variable too in favour of flow to comp
+    var exerciseCompleted by remember(exercise.sets.size) {
+        mutableStateOf(completedSets == exercise.sets.size)
+    }
+
+    /*fun setSets(value: Int) { // TODO: Dummy data func, remove. Prolly the above variable too in favour of flow to comp
         sets = value
         if (completedSets > value) {
             completedSets = value
         }
         exerciseCompleted = completedSets == sets
-    }
+    }*/
 
     val focusManager = LocalFocusManager.current
     val interActionSource = remember {
@@ -95,13 +97,13 @@ fun ExerciseListItem(
                     fontWeight = FontWeight.Bold,
                 )
                 SetsDropDown(
-                    selectedSetsRange = sets,
-                    setSets = { setSets(it) },
+                    selectedSetsRange = exercise.sets.size,
+                    setSets = { setSets(exercise, it) },
                 )
             }
             Column {
-                for (i in 1..sets) {
-                    var setCompleted by remember { // TODO: Where should this live?!
+                for (i in exercise.sets.indices) {
+                    var setCompleted by remember {
                         mutableStateOf(false)
                     }
                     Row(
@@ -113,18 +115,21 @@ fun ExerciseListItem(
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(text = "Set:", fontSize = 12.sp)
-                            Text(text = "$i", fontSize = 12.sp)
+                            Text(text = "${i + 1}", fontSize = 12.sp)
                         }
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(text = "RPE:", fontSize = 12.sp)
-                            Text(text = "8", fontSize = 12.sp)
+                            Text(text = "${exercise.sets[i].rpe}", fontSize = 12.sp)
                         }
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(text = "Range:", fontSize = 12.sp)
-                            Text(text = "5-8", fontSize = 12.sp)
+                            Text(
+                                text = "${exercise.sets[i].targetReps.lower}-${exercise.sets[i].targetReps.upper}",
+                                fontSize = 12.sp
+                            )
                         }
-                        ExerciseTextField(exercise.weight, "weight")
-                        ExerciseTextField(exercise.reps, "reps")
+                        ExerciseTextField(exercise.sets[i].weight, "weight")
+                        ExerciseTextField(exercise.sets[i].currentReps, "reps")
                         Icon(
                             modifier = Modifier
                                 .padding(top = 15.dp)
@@ -136,7 +141,7 @@ fun ExerciseListItem(
                                     setCompleted = !setCompleted
                                     if (setCompleted) {
                                         completedSets++
-                                        if (completedSets == sets) {
+                                        if (completedSets == exercise.sets.size) {
                                             exerciseCompleted = true
                                         }
                                     } else {
@@ -261,9 +266,33 @@ private fun ExerciseTextField(
 @Composable
 private fun ExerciseListItemPreview() {
     Column {
-        ExerciseListItem(exercise = MockDataLayer.workouts.first().exercises.first())
+        ExerciseListItem(exercise = MockDataLayer.workouts.first().exercises.first(), setSets = { _, _ -> })
         ExerciseListItem(
-            exercise = MockDataLayer.workouts.first().exercises.first().copy(weight = 888, reps = 123, sets = 2)
+            exercise = MockDataLayer.workouts.first().exercises.first().copy(
+                sets = listOf(
+                    WorkoutSet(
+                        id = UUID.randomUUID().toString(),
+                        currentReps = 10,
+                        rpe = 8,
+                        targetReps = Range(5, 8),
+                        weight = 20
+                    ),
+                    WorkoutSet(
+                        id = UUID.randomUUID().toString(),
+                        currentReps = 10,
+                        rpe = 8,
+                        targetReps = Range(5, 8),
+                        weight = 20
+                    ),
+                    WorkoutSet(
+                        id = UUID.randomUUID().toString(),
+                        currentReps = 10,
+                        rpe = 8,
+                        targetReps = Range(5, 8),
+                        weight = 20
+                    )
+                )
+            ), setSets = { _, _ -> }
         )
     }
 }
