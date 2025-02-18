@@ -6,10 +6,7 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCompositionContext
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -66,11 +63,10 @@ fun TheLocalGymNavHost() {
             val workout = MockDataLayer.workouts.find { workout -> workout.id == args }
             val context = LocalContext.current
             workout?.let {
-                val viewmodel = WorkoutDetailsViewModel(workout)
                 WorkoutDetailsScreen(
                     workout = workout,
                     navigateBack = navController::popBackStack,
-                    setSets = {_,_ ->}
+                    setSets = { _, _ -> }
                 )
             } ?: run {
                 navController.navigate(Routes.WORKOUTS.name)
@@ -127,29 +123,31 @@ object MockDataLayer { // TODO: Create repository and mock getters and setters
                         )
                     )
                 ),
-                Exercise(id = UUID.randomUUID().toString(), name = "Upright Row", sets = listOf(
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
-                    ),
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
-                    ),
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
+                Exercise(
+                    id = UUID.randomUUID().toString(), name = "Upright Row", sets = listOf(
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        ),
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        ),
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        )
                     )
-                )),
+                ),
                 Exercise(
                     id = UUID.randomUUID().toString(),
                     name = "Triceps overhead",
@@ -204,225 +202,243 @@ object MockDataLayer { // TODO: Create repository and mock getters and setters
                         )
                     )
                 ),
-                Exercise(id = UUID.randomUUID().toString(), name = "Chest press", sets = listOf(
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
-                    ),
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
-                    ),
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
+                Exercise(
+                    id = UUID.randomUUID().toString(), name = "Chest press", sets = listOf(
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        ),
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        ),
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        )
                     )
-                )),
-                Exercise(id = UUID.randomUUID().toString(), name = "Lat raises", sets = listOf(
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
-                    ),
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
-                    ),
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
+                ),
+                Exercise(
+                    id = UUID.randomUUID().toString(), name = "Lat raises", sets = listOf(
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        ),
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        ),
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        )
                     )
-                )),
+                ),
             )
         ),
         Workout(
             id = UUID.randomUUID().toString(),
             name = "Pull 1",
             exercises = listOf(
-                Exercise(id = UUID.randomUUID().toString(), name = "Seated Row", sets = listOf(
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
-                    ),
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
-                    ),
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
+                Exercise(
+                    id = UUID.randomUUID().toString(), name = "Seated Row", sets = listOf(
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        ),
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        ),
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        )
                     )
-                )),
-                Exercise(id = UUID.randomUUID().toString(), name = "Biceps curl", sets = listOf(
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
-                    ),
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
-                    ),
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
+                ),
+                Exercise(
+                    id = UUID.randomUUID().toString(), name = "Biceps curl", sets = listOf(
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        ),
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        ),
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        )
                     )
-                )),
-                Exercise(id = UUID.randomUUID().toString(), name = "Lat pull down", sets = listOf(
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
-                    ),
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
-                    ),
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
+                ),
+                Exercise(
+                    id = UUID.randomUUID().toString(), name = "Lat pull down", sets = listOf(
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        ),
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        ),
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        )
                     )
-                )),
-                Exercise(id = UUID.randomUUID().toString(), name = "Rear delt fly", sets = listOf(
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
-                    ),
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
-                    ),
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
+                ),
+                Exercise(
+                    id = UUID.randomUUID().toString(), name = "Rear delt fly", sets = listOf(
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        ),
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        ),
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        )
                     )
-                )),
+                ),
             )
         ),
         Workout(
             id = UUID.randomUUID().toString(),
             name = "Leg 1",
             exercises = listOf(
-                Exercise(id = UUID.randomUUID().toString(), name = "Squat", sets = listOf(
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
-                    ),
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
-                    ),
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
+                Exercise(
+                    id = UUID.randomUUID().toString(), name = "Squat", sets = listOf(
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        ),
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        ),
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        )
                     )
-                )),
-                Exercise(id = UUID.randomUUID().toString(), name = "Split squats", sets = listOf(
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
-                    ),
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
-                    ),
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
+                ),
+                Exercise(
+                    id = UUID.randomUUID().toString(), name = "Split squats", sets = listOf(
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        ),
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        ),
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        )
                     )
-                )),
-                Exercise(id = UUID.randomUUID().toString(), name = "Calf raises", sets = listOf(
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
-                    ),
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
-                    ),
-                    WorkoutSet(
-                        id = UUID.randomUUID().toString(),
-                        currentReps = 10,
-                        rpe = 8,
-                        targetReps = Range(5, 8),
-                        weight = 20
+                ),
+                Exercise(
+                    id = UUID.randomUUID().toString(), name = "Calf raises", sets = listOf(
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        ),
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        ),
+                        WorkoutSet(
+                            id = UUID.randomUUID().toString(),
+                            currentReps = 10,
+                            rpe = 8,
+                            targetReps = Range(5, 8),
+                            weight = 20
+                        )
                     )
-                )),
+                ),
             )
         ),
     )
