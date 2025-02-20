@@ -24,7 +24,6 @@ fun WorkoutDetailsScreen(
     workout: Workout,
     navigateBack: () -> Unit,
     setSets: (Exercise, Int) -> Unit,
-    viewModel: WorkoutDetailsViewModel = viewModel()
 ) {
     Scaffold(
         topBar = {
