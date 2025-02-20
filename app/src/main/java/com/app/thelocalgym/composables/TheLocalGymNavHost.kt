@@ -7,6 +7,7 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -63,8 +64,13 @@ fun TheLocalGymNavHost() {
             val workout = MockDataLayer.workouts.find { workout -> workout.id == args }
             val context = LocalContext.current
             workout?.let {
+                val viewModel: WorkoutDetailsViewModel = hiltViewModel(
+                    creationCallback = { factory: WorkoutDetailsViewModel.WorkoutDetailsViewModelFactory ->
+                        factory.create(it)
+                    }
+                )
                 WorkoutDetailsScreen(
-                    workout = workout,
+                    workout = viewModel.getWorkout(), // Just to verify DI
                     navigateBack = navController::popBackStack,
                     setSets = { _, _ -> }
                 )
