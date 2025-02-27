@@ -6,6 +6,8 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
@@ -69,10 +71,11 @@ fun TheLocalGymNavHost() {
                         factory.create(it)
                     }
                 )
+                val workoutFlow by viewModel.workoutFlow.collectAsState()
                 WorkoutDetailsScreen(
-                    workout = viewModel.getWorkout(), // Just to verify DI
+                    workout = workoutFlow,
                     navigateBack = navController::popBackStack,
-                    setSets = { _, _ -> }
+                    setSets = { exercise, newValue -> viewModel.setNumberOfSets(exercise, newValue) }
                 )
             } ?: run {
                 navController.navigate(Routes.WORKOUTS.name)

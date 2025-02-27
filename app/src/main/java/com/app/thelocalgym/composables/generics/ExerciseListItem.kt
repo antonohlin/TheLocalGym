@@ -60,14 +60,6 @@ fun ExerciseListItem(
         mutableStateOf(completedSets == exercise.sets.size)
     }
 
-    /*fun setSets(value: Int) { // TODO: Dummy data func, remove. Prolly the above variable too in favour of flow to comp
-        sets = value
-        if (completedSets > value) {
-            completedSets = value
-        }
-        exerciseCompleted = completedSets == sets
-    }*/
-
     val focusManager = LocalFocusManager.current
     val interActionSource = remember {
         MutableInteractionSource()
