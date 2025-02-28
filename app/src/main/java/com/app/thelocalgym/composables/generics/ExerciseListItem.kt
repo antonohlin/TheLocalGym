@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -210,10 +211,16 @@ private fun ExerciseTextField(
 ) {
     val focusManager = LocalFocusManager.current
     var valueDisplayed by remember {
-        mutableStateOf(value.toString())
+        mutableStateOf("")
     }
     var isTextFieldFocused by remember {
         mutableStateOf(false)
+    }
+    var showPlaceholder by remember {
+        mutableStateOf(true)
+    }
+    val placeholderValue by remember {
+        mutableStateOf(value.toString())
     }
 
     Column {
@@ -236,6 +243,19 @@ private fun ExerciseTextField(
                 ),
             contentAlignment = Alignment.Center
         ) {
+            if (showPlaceholder) {
+                BasicTextField(
+                    modifier = Modifier
+                        .padding(2.dp)
+                        .width(40.dp)
+                        .height(20.dp),
+                    value = placeholderValue,
+                    onValueChange = { },
+                    readOnly = true,
+                    singleLine = true,
+                    textStyle = TextStyle.Default.copy(color = Color.Gray)
+                )
+            }
             BasicTextField(
                 modifier = Modifier
                     .padding(2.dp)
@@ -245,7 +265,10 @@ private fun ExerciseTextField(
                         isTextFieldFocused = focusState.isFocused
                     },
                 value = valueDisplayed,
-                onValueChange = { valueDisplayed = it },
+                onValueChange = {
+                    valueDisplayed = it
+                    showPlaceholder = valueDisplayed.isBlank()
+                                },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
