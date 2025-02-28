@@ -4,6 +4,7 @@ import android.util.Range
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,12 +33,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -48,6 +56,7 @@ import com.app.thelocalgym.composables.MockDataLayer
 import com.app.thelocalgym.ui.theme.lightBlue
 import java.util.UUID
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ExerciseListItem(
     exercise: Exercise,
@@ -96,9 +105,24 @@ fun ExerciseListItem(
             }
             Column {
                 for (i in exercise.sets.indices) {
+                    val (weight, reps, icon) = remember { FocusRequester.createRefs() }
                     var setCompleted by remember {
                         mutableStateOf(false)
                     }
+
+                    fun toggleIcon() {
+                        setCompleted = !setCompleted
+                        if (setCompleted) {
+                            completedSets++
+                            if (completedSets == exercise.sets.size) {
+                                exerciseCompleted = true
+                            }
+                        } else {
+                            completedSets--
+                            exerciseCompleted = false
+                        }
+                    }
+
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -121,26 +145,34 @@ fun ExerciseListItem(
                                 fontSize = 12.sp
                             )
                         }
-                        ExerciseTextField(exercise.sets[i].weight, "weight")
-                        ExerciseTextField(exercise.sets[i].currentReps, "reps")
+                        ExerciseTextField(
+                            Modifier
+                                .focusRequester(weight)
+                                .focusProperties { next = reps },
+                            exercise.sets[i].weight,
+                            "weight",
+                            focusManager
+                        )
+                        ExerciseTextField(
+                            Modifier
+                                .focusRequester(reps)
+                                .focusProperties { next = icon },
+                            exercise.sets[i].currentReps,
+                            "reps",
+                            focusManager
+                        )
                         Icon(
                             modifier = Modifier
                                 .padding(top = 15.dp)
                                 .size(20.dp)
+                                .focusRequester(icon)
+                                .onFocusChanged { if (it.isFocused) toggleIcon() }
+                                .focusable()
                                 .clickable(
                                     indication = null,
                                     interactionSource = interActionSource,
                                 ) {
-                                    setCompleted = !setCompleted
-                                    if (setCompleted) {
-                                        completedSets++
-                                        if (completedSets == exercise.sets.size) {
-                                            exerciseCompleted = true
-                                        }
-                                    } else {
-                                        completedSets--
-                                        exerciseCompleted = false
-                                    }
+                                    toggleIcon()
                                 },
                             imageVector = Icons.Default.CheckCircle,
                             contentDescription = "checkCircle",
@@ -206,10 +238,11 @@ private fun SetsDropDown(
 
 @Composable
 private fun ExerciseTextField(
+    modifier: Modifier,
     value: Int,
     title: String,
+    focusManager: FocusManager,
 ) {
-    val focusManager = LocalFocusManager.current
     var valueDisplayed by remember {
         mutableStateOf("")
     }
@@ -257,7 +290,7 @@ private fun ExerciseTextField(
                 )
             }
             BasicTextField(
-                modifier = Modifier
+                modifier = modifier
                     .padding(2.dp)
                     .width(40.dp)
                     .height(20.dp)
@@ -268,10 +301,13 @@ private fun ExerciseTextField(
                 onValueChange = {
                     valueDisplayed = it
                     showPlaceholder = valueDisplayed.isBlank()
-                                },
+                },
                 singleLine = true,
-                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Next
+                ),
+                keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) })
             )
         }
     }
