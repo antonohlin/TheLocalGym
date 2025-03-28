@@ -3,7 +3,7 @@ package com.app.thelocalgym.composables
 import androidx.lifecycle.ViewModel
 import com.app.thelocalgym.Exercise
 import com.app.thelocalgym.Workout
-import com.app.thelocalgym.WorkoutRepository
+import com.app.thelocalgym.repository.WorkoutRepository
 import com.app.thelocalgym.WorkoutSet
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import java.util.UUID
 
 @HiltViewModel(assistedFactory = WorkoutDetailsViewModel.WorkoutDetailsViewModelFactory::class)
 class WorkoutDetailsViewModel @AssistedInject constructor(
@@ -30,7 +31,7 @@ class WorkoutDetailsViewModel @AssistedInject constructor(
             val numberOfSetsToAdd = newValue - exercise.sets.size
             val newSets = mutableListOf<WorkoutSet>()
             for (i in 1..numberOfSetsToAdd) {
-                newSets.add(exercise.sets.last())
+                newSets.add(exercise.sets.last().copy(id = UUID.randomUUID().toString()))
             }
             exercise.sets.plus(newSets)
         } else {

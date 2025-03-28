@@ -52,7 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.thelocalgym.Exercise
 import com.app.thelocalgym.WorkoutSet
-import com.app.thelocalgym.composables.MockDataLayer
+import com.app.thelocalgym.repository.MockDataLayer
 import com.app.thelocalgym.ui.theme.lightBlue
 import java.util.UUID
 
