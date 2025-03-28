@@ -1,4 +1,4 @@
-package com.app.thelocalgym
+package com.app.thelocalgym.repository
 
 import dagger.Binds
 import dagger.Module

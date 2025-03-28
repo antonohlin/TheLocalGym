@@ -11,13 +11,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.thelocalgym.Exercise
 import com.app.thelocalgym.Workout
-import com.app.thelocalgym.composables.MockDataLayer
-import com.app.thelocalgym.composables.WorkoutDetailsViewModel
 import com.app.thelocalgym.composables.generics.ExerciseListItem
 import com.app.thelocalgym.composables.generics.TopBar
+import com.app.thelocalgym.repository.MockDataLayer
 
 @Composable
 fun WorkoutDetailsScreen(

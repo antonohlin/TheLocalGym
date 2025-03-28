@@ -10,9 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.app.thelocalgym.Workout
 import com.app.thelocalgym.composables.generics.ClickableListItem
-import com.app.thelocalgym.composables.MockDataLayer
 import com.app.thelocalgym.composables.generics.TopBar
 import com.app.thelocalgym.composables.generics.VerticalSpacer
+import com.app.thelocalgym.repository.MockDataLayer
 
 @Composable
 fun WorkoutsScreen(
