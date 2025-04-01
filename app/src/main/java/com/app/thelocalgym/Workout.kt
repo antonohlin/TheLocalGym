@@ -6,7 +6,13 @@ data class Workout(
     val id: String,
     val name: String,
     val exercises: List<Exercise>
-)
+) {
+    companion object {
+        fun default(): Workout {
+            return Workout(id = "", name = "default", exercises = emptyList())
+        }
+    }
+}
 
 data class Exercise(
     val id: String,
