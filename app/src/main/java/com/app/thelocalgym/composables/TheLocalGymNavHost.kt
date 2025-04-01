@@ -5,6 +5,7 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
@@ -59,16 +60,16 @@ fun TheLocalGymNavHost() {
             ),
         ) {
             val args = it.arguments?.getString("workoutId")
-            val workout = MockDataLayer.workouts.find { workout -> workout.id == args }
             val context = LocalContext.current
-            workout?.let {
-                val viewModel: WorkoutDetailsViewModel = hiltViewModel(
-                    creationCallback = { factory: WorkoutDetailsViewModel.WorkoutDetailsViewModelFactory ->
-                        factory.create(it)
-                    }
-                )
+            args?.let { workoutId ->
+                val viewModel: WorkoutDetailsViewModel = hiltViewModel()
+                LaunchedEffect(Unit) {
+                    viewModel.initWorkoutDetails(workoutId)
+                }
                 val workoutFlow by viewModel.workoutFlow.collectAsState()
+                val viewState by viewModel.viewState.collectAsState()
                 WorkoutDetailsScreen(
+                    viewState = viewState,
                     workout = workoutFlow,
                     navigateBack = navController::popBackStack,
                     setSets = { exercise, newValue -> viewModel.setNumberOfSets(exercise, newValue) }
