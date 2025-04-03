@@ -104,7 +104,7 @@ fun ExerciseListItem(
                 )
             }
             Column {
-                for (i in exercise.sets.indices) {
+                exercise.sets.forEachIndexed { i, set ->
                     val (weight, reps, icon) = remember { FocusRequester.createRefs() }
                     var setCompleted by remember {
                         mutableStateOf(false)
@@ -130,26 +130,14 @@ fun ExerciseListItem(
                         horizontalArrangement = Arrangement.SpaceEvenly,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(text = "Set:", fontSize = 12.sp)
-                            Text(text = "${i + 1}", fontSize = 12.sp)
-                        }
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(text = "RPE:", fontSize = 12.sp)
-                            Text(text = "${exercise.sets[i].rpe}", fontSize = 12.sp)
-                        }
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(text = "Range:", fontSize = 12.sp)
-                            Text(
-                                text = "${exercise.sets[i].targetReps.lower}-${exercise.sets[i].targetReps.upper}",
-                                fontSize = 12.sp
-                            )
-                        }
+                        SetPropertyText("Set:", "${i + 1}")
+                        SetPropertyText("RPE:", "${set.rpe}")
+                        SetPropertyText("Range:", "${set.targetReps.lower}-${set.targetReps.upper}")
                         ExerciseTextField(
                             Modifier
                                 .focusRequester(weight)
                                 .focusProperties { next = reps },
-                            exercise.sets[i].weight,
+                            set.weight,
                             "weight",
                             focusManager
                         )
@@ -157,7 +145,7 @@ fun ExerciseListItem(
                             Modifier
                                 .focusRequester(reps)
                                 .focusProperties { next = icon },
-                            exercise.sets[i].currentReps,
+                            set.currentReps,
                             "reps",
                             focusManager
                         )
@@ -186,6 +174,14 @@ fun ExerciseListItem(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun SetPropertyText(title: String, value: String) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(text = title, fontSize = 12.sp)
+        Text(text = value, fontSize = 12.sp)
     }
 }
 
