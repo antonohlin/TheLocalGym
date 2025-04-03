@@ -72,7 +72,8 @@ fun TheLocalGymNavHost() {
                     viewState = viewState,
                     workout = workoutFlow,
                     navigateBack = navController::popBackStack,
-                    setSets = { exercise, newValue -> viewModel.setNumberOfSets(exercise, newValue) }
+                    setSets = { exercise, newValue -> viewModel.setNumberOfSets(exercise, newValue) },
+                    completeSet = viewModel::completeSet,
                 )
             } ?: run {
                 navController.navigate(Routes.WORKOUTS.name)

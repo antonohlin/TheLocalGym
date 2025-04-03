@@ -32,4 +32,5 @@ data class WorkoutSet(
     val rpe: Int,
     val targetReps: Range<Int>,
     val weight: Int,
+    var setCompleted: Boolean = false,
 )

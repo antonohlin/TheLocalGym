@@ -27,6 +27,7 @@ fun WorkoutDetailsScreen(
     workout: Workout,
     navigateBack: () -> Unit,
     setSets: (Exercise, Int) -> Unit,
+    completeSet: (id: String) -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -51,7 +52,11 @@ fun WorkoutDetailsScreen(
                     )
                 }
                 items(items = workout.exercises, key = { it.id }) {
-                    ExerciseListItem(exercise = it, setSets = setSets)
+                    ExerciseListItem(
+                        exercise = it,
+                        setSets = setSets,
+                        completeSet = completeSet,
+                    )
                 }
             }
         }
@@ -65,6 +70,7 @@ fun WorkoutDetailsSuccessScreenPreview() {
         viewState = WorkoutDetailsViewState.Success,
         workout = MockDataLayer.workouts.first(),
         navigateBack = {},
-        setSets = { _, _ -> }
+        setSets = { _, _ -> },
+        completeSet = {}
     )
 }

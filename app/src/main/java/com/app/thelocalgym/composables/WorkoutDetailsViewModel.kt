@@ -39,12 +39,34 @@ class WorkoutDetailsViewModel @Inject constructor(
         _viewState.update { state }
     }
 
+    init {
+        println("*** INIT")
+    }
+
     fun initWorkoutDetails(id: String) {
         viewModelScope.launch(Dispatchers.IO) { // todo: Inject dispatcher
             getWorkout(id)?.let {
                 setWorkout(it)
                 setViewState(WorkoutDetailsViewState.Success)
             } ?: setViewState(WorkoutDetailsViewState.Error)
+        }
+    }
+
+    fun completeSet(id: String) {
+        _workoutFlow.update {
+            it.copy(exercises = it.exercises.map { exe ->
+                if (exe.sets.contains(exe.sets.find { set -> set.id == id })) {
+                    exe.copy(sets = exe.sets.map { set ->
+                        if (set.id == id) {
+                            set.copy(setCompleted = !set.setCompleted)
+                        } else {
+                            set
+                        }
+                    })
+                } else {
+                    exe
+                }
+            }) // lol
         }
     }
 
@@ -56,7 +78,7 @@ class WorkoutDetailsViewModel @Inject constructor(
             val numberOfSetsToAdd = newValue - exercise.sets.size
             val newSets = mutableListOf<WorkoutSet>()
             for (i in 1..numberOfSetsToAdd) {
-                newSets.add(exercise.sets.last().copy(id = UUID.randomUUID().toString()))
+                newSets.add(exercise.sets.last().copy(id = UUID.randomUUID().toString(), setCompleted = false))
             }
             exercise.sets.plus(newSets)
         } else {
