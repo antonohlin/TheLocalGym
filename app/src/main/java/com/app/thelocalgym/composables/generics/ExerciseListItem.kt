@@ -24,11 +24,11 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -43,10 +43,10 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -61,16 +61,12 @@ import java.util.UUID
 fun ExerciseListItem(
     exercise: Exercise,
     setSets: (Exercise, Int) -> Unit,
+    completeSet: (id: String) -> Unit,
 ) {
-    var completedSets by remember {
-        mutableIntStateOf(0)
-    }
-
-    var exerciseCompleted by remember(exercise.sets.size) {
-        mutableStateOf(completedSets == exercise.sets.size)
-    }
-
     val focusManager = LocalFocusManager.current
+    val exerciseCompleted by remember(exercise.sets) {
+        mutableStateOf(exercise.sets.all { it.setCompleted })
+    }
     val interActionSource = remember {
         MutableInteractionSource()
     }
@@ -104,25 +100,8 @@ fun ExerciseListItem(
                 )
             }
             Column {
-                for (i in exercise.sets.indices) {
+                exercise.sets.forEachIndexed { i, set ->
                     val (weight, reps, icon) = remember { FocusRequester.createRefs() }
-                    var setCompleted by remember {
-                        mutableStateOf(false)
-                    }
-
-                    fun toggleIcon() {
-                        setCompleted = !setCompleted
-                        if (setCompleted) {
-                            completedSets++
-                            if (completedSets == exercise.sets.size) {
-                                exerciseCompleted = true
-                            }
-                        } else {
-                            completedSets--
-                            exerciseCompleted = false
-                        }
-                    }
-
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -130,26 +109,14 @@ fun ExerciseListItem(
                         horizontalArrangement = Arrangement.SpaceEvenly,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(text = "Set:", fontSize = 12.sp)
-                            Text(text = "${i + 1}", fontSize = 12.sp)
-                        }
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(text = "RPE:", fontSize = 12.sp)
-                            Text(text = "${exercise.sets[i].rpe}", fontSize = 12.sp)
-                        }
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(text = "Range:", fontSize = 12.sp)
-                            Text(
-                                text = "${exercise.sets[i].targetReps.lower}-${exercise.sets[i].targetReps.upper}",
-                                fontSize = 12.sp
-                            )
-                        }
+                        SetPropertyText("Set:", "${i + 1}")
+                        SetPropertyText("RPE:", "${set.rpe}")
+                        SetPropertyText("Range:", "${set.targetReps.lower}-${set.targetReps.upper}")
                         ExerciseTextField(
                             Modifier
                                 .focusRequester(weight)
                                 .focusProperties { next = reps },
-                            exercise.sets[i].weight,
+                            set.weight,
                             "weight",
                             focusManager
                         )
@@ -157,7 +124,7 @@ fun ExerciseListItem(
                             Modifier
                                 .focusRequester(reps)
                                 .focusProperties { next = icon },
-                            exercise.sets[i].currentReps,
+                            set.currentReps,
                             "reps",
                             focusManager
                         )
@@ -166,17 +133,17 @@ fun ExerciseListItem(
                                 .padding(top = 15.dp)
                                 .size(20.dp)
                                 .focusRequester(icon)
-                                .onFocusChanged { if (it.isFocused) toggleIcon() }
+                                .onFocusChanged { if (it.isFocused) completeSet(set.id) }
                                 .focusable()
                                 .clickable(
                                     indication = null,
                                     interactionSource = interActionSource,
                                 ) {
-                                    toggleIcon()
+                                    completeSet(set.id)
                                 },
                             imageVector = Icons.Default.CheckCircle,
                             contentDescription = "checkCircle",
-                            tint = if (setCompleted || exerciseCompleted) {
+                            tint = if (set.setCompleted || exerciseCompleted) {
                                 MaterialTheme.colorScheme.primary
                             } else {
                                 Color.LightGray
@@ -186,6 +153,14 @@ fun ExerciseListItem(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun SetPropertyText(title: String, value: String) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(text = title, fontSize = 12.sp)
+        Text(text = value, fontSize = 12.sp)
     }
 }
 
@@ -249,9 +224,6 @@ private fun ExerciseTextField(
     var isTextFieldFocused by remember {
         mutableStateOf(false)
     }
-    var showPlaceholder by remember {
-        mutableStateOf(true)
-    }
     val placeholderValue by remember {
         mutableStateOf(value.toString())
     }
@@ -276,17 +248,11 @@ private fun ExerciseTextField(
                 ),
             contentAlignment = Alignment.Center
         ) {
-            if (showPlaceholder) {
-                BasicTextField(
-                    modifier = Modifier
-                        .padding(2.dp)
-                        .width(40.dp)
-                        .height(20.dp),
-                    value = placeholderValue,
-                    onValueChange = { },
-                    readOnly = true,
-                    singleLine = true,
-                    textStyle = TextStyle.Default.copy(color = Color.Gray)
+            if (valueDisplayed.isBlank() && !isTextFieldFocused) {
+                Text(
+                    text = placeholderValue,
+                    color = Color.Gray,
+                    modifier = Modifier.padding(2.dp)
                 )
             }
             BasicTextField(
@@ -300,14 +266,14 @@ private fun ExerciseTextField(
                 value = valueDisplayed,
                 onValueChange = {
                     valueDisplayed = it
-                    showPlaceholder = valueDisplayed.isBlank()
                 },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Next
                 ),
-                keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) })
+                keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) }),
+                textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
             )
         }
     }
@@ -317,7 +283,11 @@ private fun ExerciseTextField(
 @Composable
 private fun ExerciseListItemPreview() {
     Column {
-        ExerciseListItem(exercise = MockDataLayer.workouts.first().exercises.first(), setSets = { _, _ -> })
+        ExerciseListItem(
+            exercise = MockDataLayer.workouts.first().exercises.first(),
+            setSets = { _, _ -> },
+            completeSet = {},
+        )
         ExerciseListItem(
             exercise = MockDataLayer.workouts.first().exercises.first().copy(
                 sets = listOf(
@@ -343,7 +313,8 @@ private fun ExerciseListItemPreview() {
                         weight = 20
                     )
                 )
-            ), setSets = { _, _ -> }
+            ), setSets = { _, _ -> },
+            completeSet = {}
         )
     }
 }
