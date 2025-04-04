@@ -1,14 +1,15 @@
 package com.app.thelocalgym.composables.screens
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,7 +27,8 @@ fun WorkoutDetailsScreen(
     viewState: WorkoutDetailsViewState,
     workout: Workout,
     navigateBack: () -> Unit,
-    setSets: (Exercise, Int) -> Unit,
+    addSet: (Exercise) -> Unit,
+    removeSet: (Exercise) -> Unit,
     completeSet: (id: String) -> Unit,
 ) {
     Scaffold(
@@ -37,11 +39,7 @@ fun WorkoutDetailsScreen(
             )
         }
     ) { padding ->
-        AnimatedVisibility(
-            visible = viewState is WorkoutDetailsViewState.Success,
-            enter = fadeIn(),
-            exit = fadeOut(),
-        ) {
+        if (viewState is WorkoutDetailsViewState.Success) {
             LazyColumn(modifier = Modifier.padding(padding)) {
                 item {
                     Text(
@@ -54,7 +52,8 @@ fun WorkoutDetailsScreen(
                 items(items = workout.exercises, key = { it.id }) {
                     ExerciseListItem(
                         exercise = it,
-                        setSets = setSets,
+                        addSet = addSet,
+                        removeSet = removeSet,
                         completeSet = completeSet,
                     )
                 }
@@ -70,7 +69,8 @@ fun WorkoutDetailsSuccessScreenPreview() {
         viewState = WorkoutDetailsViewState.Success,
         workout = MockDataLayer.workouts.first(),
         navigateBack = {},
-        setSets = { _, _ -> },
+        addSet = {},
+        removeSet = {},
         completeSet = {}
     )
 }

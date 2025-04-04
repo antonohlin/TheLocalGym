@@ -20,20 +20,19 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusManager
@@ -43,6 +42,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -51,21 +51,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.thelocalgym.Exercise
+import com.app.thelocalgym.R
 import com.app.thelocalgym.WorkoutSet
 import com.app.thelocalgym.repository.MockDataLayer
 import com.app.thelocalgym.ui.theme.lightBlue
 import java.util.UUID
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ExerciseListItem(
     exercise: Exercise,
-    setSets: (Exercise, Int) -> Unit,
+    addSet: (Exercise) -> Unit,
+    removeSet: (Exercise) -> Unit,
     completeSet: (id: String) -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
     val exerciseCompleted by remember(exercise.sets) {
-        mutableStateOf(exercise.sets.all { it.setCompleted })
+        derivedStateOf { exercise.sets.all { it.setCompleted } }
     }
     val interActionSource = remember {
         MutableInteractionSource()
@@ -88,16 +89,39 @@ fun ExerciseListItem(
             ) { focusManager.clearFocus() }
     ) {
         Column(modifier = Modifier.padding(6.dp)) {
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Text(
                     text = exercise.name,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                 )
-                SetsDropDown(
-                    selectedSetsRange = exercise.sets.size,
-                    setSets = { setSets(exercise, it) },
-                )
+                Row {
+                    Icon(
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .size(20.dp)
+                            .clickable {
+                                removeSet(exercise)
+                            },
+                        painter = painterResource(R.drawable.remove_24px),
+                        contentDescription = "Remove set icon"
+                    )
+                    Icon(
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .size(20.dp)
+                            .clickable {
+                                addSet(exercise)
+                            },
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add set icon"
+                    )
+                }
             }
             Column {
                 exercise.sets.forEachIndexed { i, set ->
@@ -142,7 +166,7 @@ fun ExerciseListItem(
                                     completeSet(set.id)
                                 },
                             imageVector = Icons.Default.CheckCircle,
-                            contentDescription = "checkCircle",
+                            contentDescription = "Complete set icon",
                             tint = if (set.setCompleted || exerciseCompleted) {
                                 MaterialTheme.colorScheme.primary
                             } else {
@@ -161,53 +185,6 @@ private fun SetPropertyText(title: String, value: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = title, fontSize = 12.sp)
         Text(text = value, fontSize = 12.sp)
-    }
-}
-
-@Composable
-private fun SetsDropDown(
-    selectedSetsRange: Int,
-    setSets: (Int) -> Unit,
-) {
-    var showSetsDropDown by remember {
-        mutableStateOf(false)
-    }
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Text(text = "Sets: ", fontSize = 12.sp)
-        Box(
-            modifier = Modifier
-                .background(Color.White)
-                .border(
-                    width = 1.dp,
-                    color = Color.DarkGray,
-                    shape = RoundedCornerShape(10)
-                )
-                .clickable { showSetsDropDown = true },
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = selectedSetsRange.toString(),
-                modifier = Modifier.padding(5.dp),
-                fontSize = 12.sp,
-            )
-            DropdownMenu(
-                modifier = Modifier.width(70.dp),
-                expanded = showSetsDropDown,
-                onDismissRequest = { showSetsDropDown = false }
-            ) {
-                for (i in 1..5) {
-                    DropdownMenuItem(
-                        text = {
-                            Text(text = "$i")
-                        },
-                        onClick = {
-                            setSets(i)
-                            showSetsDropDown = false
-                        }
-                    )
-                }
-            }
-        }
     }
 }
 
@@ -285,7 +262,8 @@ private fun ExerciseListItemPreview() {
     Column {
         ExerciseListItem(
             exercise = MockDataLayer.workouts.first().exercises.first(),
-            setSets = { _, _ -> },
+            addSet = {},
+            removeSet = {},
             completeSet = {},
         )
         ExerciseListItem(
@@ -313,7 +291,8 @@ private fun ExerciseListItemPreview() {
                         weight = 20
                     )
                 )
-            ), setSets = { _, _ -> },
+            ), addSet = {},
+            removeSet = {},
             completeSet = {}
         )
     }

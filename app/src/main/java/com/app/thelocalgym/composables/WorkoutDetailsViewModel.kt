@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.thelocalgym.Exercise
 import com.app.thelocalgym.Workout
-import com.app.thelocalgym.WorkoutSet
 import com.app.thelocalgym.repository.WorkoutRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -66,26 +65,31 @@ class WorkoutDetailsViewModel @Inject constructor(
         }
     }
 
-    fun setNumberOfSets(exercise: Exercise, newValue: Int) {
-        require(newValue > 0)
-        if (exercise.sets.size == newValue) return
-
-        val newListOfSets = if (exercise.sets.size < newValue) {
-            val numberOfSetsToAdd = newValue - exercise.sets.size
-            val newSets = mutableListOf<WorkoutSet>()
-            for (i in 1..numberOfSetsToAdd) {
-                newSets.add(exercise.sets.last().copy(id = UUID.randomUUID().toString(), setCompleted = false))
-            }
-            exercise.sets.plus(newSets)
-        } else {
-            val numberOfSetsToDrop = exercise.sets.size - newValue
-            exercise.sets.dropLast(numberOfSetsToDrop)
-        }
-        // todo: write and read to/from local db
+    fun addSet(exercise: Exercise) {
+        if (exercise.sets.size == 5) return
         _workoutFlow.update {
             it.copy(exercises = it.exercises.map { exe ->
-                if (exe.id == exercise.id) {
-                    exe.copy(sets = newListOfSets)
+                if (exercise.id == exe.id) {
+                    exe.copy(
+                        sets = exe.sets.plus(
+                            exe.sets.last().copy(
+                                id = UUID.randomUUID().toString(), setCompleted = false
+                            )
+                        )
+                    )
+                } else {
+                    exe
+                }
+            })
+        }
+    }
+
+    fun removeSet(exercise: Exercise) {
+        if (exercise.sets.size == 1) return
+        _workoutFlow.update {
+            it.copy(exercises = it.exercises.map { exe ->
+                if (exercise.id == exe.id) {
+                    exe.copy(sets = exe.sets.toMutableList().dropLast(1))
                 } else {
                     exe
                 }
