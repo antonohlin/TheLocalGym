@@ -39,10 +39,6 @@ class WorkoutDetailsViewModel @Inject constructor(
         _viewState.update { state }
     }
 
-    init {
-        println("*** INIT")
-    }
-
     fun initWorkoutDetails(id: String) {
         viewModelScope.launch(Dispatchers.IO) { // todo: Inject dispatcher
             getWorkout(id)?.let {
