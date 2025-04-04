@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -42,7 +42,7 @@ private fun ClickableListItemPreview() {
         ClickableListItem(
             text = "Sample Text",
             onClick = {},
-            icon = Icons.Default.List
+            icon = Icons.AutoMirrored.Default.List
         )
     }
 }
