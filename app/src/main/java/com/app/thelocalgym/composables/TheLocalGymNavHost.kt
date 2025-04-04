@@ -66,15 +66,16 @@ fun TheLocalGymNavHost() {
                 LaunchedEffect(Unit) {
                     viewModel.initWorkoutDetails(workoutId)
                 }
-                val workoutFlow by viewModel.workoutFlow.collectAsState()
-                val viewState by viewModel.viewState.collectAsState()
+                val state by viewModel.uiState.collectAsState()
                 WorkoutDetailsScreen(
-                    viewState = viewState,
-                    workout = workoutFlow,
+                    viewState = state.viewState,
+                    workout = state.workout,
                     navigateBack = navController::popBackStack,
                     addSet = viewModel::addSet,
                     removeSet = viewModel::removeSet,
                     completeSet = viewModel::completeSet,
+                    listType = state.listType,
+                    setListType = viewModel::setListType
                 )
             } ?: run {
                 navController.navigate(Routes.WORKOUTS.name)
