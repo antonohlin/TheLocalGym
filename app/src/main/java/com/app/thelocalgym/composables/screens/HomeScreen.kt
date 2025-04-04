@@ -3,8 +3,8 @@ package com.app.thelocalgym.composables.screens
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -29,7 +29,7 @@ fun HomeScreen(
             VerticalSpacer(height = 5)
             ClickableListItem("Programs", onProgramsClicked, Icons.Default.DateRange)
             ClickableListItem("Workouts", onWorkoutsClicked, Icons.Default.Person) // TODO: Find cooler icons...
-            ClickableListItem("Exercises", onExercisesClicked, Icons.Default.List)
+            ClickableListItem("Exercises", onExercisesClicked, Icons.AutoMirrored.Default.List)
         }
     }
 }

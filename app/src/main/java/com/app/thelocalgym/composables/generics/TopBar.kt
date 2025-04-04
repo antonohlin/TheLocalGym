@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -31,7 +31,7 @@ fun TopBar(
     onRightClick: () -> Unit = {},
     showLeftIcon: Boolean = false,
     showRightIcon: Boolean = false,
-    leftIcon: ImageVector = Icons.Default.ArrowBack,
+    leftIcon: ImageVector = Icons.AutoMirrored.Default.ArrowBack,
     rightIcon: ImageVector = Icons.Default.Menu,
 ) {
     Row(
