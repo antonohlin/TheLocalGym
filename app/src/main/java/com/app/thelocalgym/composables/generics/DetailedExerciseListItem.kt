@@ -213,7 +213,6 @@ fun ExerciseTextField(
     Column {
         Text(
             text = title.plus(":"),
-            modifier = Modifier.padding(bottom = 1.dp),
             fontSize = 12.sp,
         )
         Box(

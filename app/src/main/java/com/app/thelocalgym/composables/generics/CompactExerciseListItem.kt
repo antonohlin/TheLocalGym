@@ -66,7 +66,7 @@ fun CompactExerciseListItem(
         Row(
             modifier = Modifier
                 .weight(3f)
-                .padding(bottom = 4.dp), horizontalArrangement = Arrangement.SpaceEvenly
+                .padding(bottom = 5.dp), horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             SetPropertyText("Sets:", "${exercise.sets.size}")
             SetPropertyText(
