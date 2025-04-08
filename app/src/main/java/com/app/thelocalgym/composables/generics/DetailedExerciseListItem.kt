@@ -58,7 +58,7 @@ import com.app.thelocalgym.ui.theme.lightBlue
 import java.util.UUID
 
 @Composable
-fun ExerciseListItem(
+fun DetailedExerciseListItem(
     exercise: Exercise,
     addSet: (Exercise) -> Unit,
     removeSet: (Exercise) -> Unit,
@@ -73,15 +73,14 @@ fun ExerciseListItem(
     }
     Box(
         modifier = Modifier
-            .padding(vertical = 4.dp)
-            .padding(horizontal = 8.dp)
+            .padding(vertical = 4.dp, horizontal = 8.dp)
             .background(
                 color = if (exerciseCompleted) {
                     lightBlue
                 } else {
                     MaterialTheme.colorScheme.surface
                 },
-                RoundedCornerShape(1)
+                RoundedCornerShape(3)
             )
             .clickable(
                 interactionSource = interActionSource,
@@ -135,7 +134,13 @@ fun ExerciseListItem(
                     ) {
                         SetPropertyText("Set:", "${i + 1}")
                         SetPropertyText("RPE:", "${set.rpe}")
-                        SetPropertyText("Range:", "${set.targetReps.lower}-${set.targetReps.upper}")
+                        SetPropertyText(
+                            "Reps:", if (set.targetReps.lower != set.targetReps.upper) {
+                                "${set.targetReps.lower}-${set.targetReps.upper}"
+                            } else {
+                                "${set.targetReps.lower}"
+                            }
+                        )
                         ExerciseTextField(
                             Modifier
                                 .focusRequester(weight)
@@ -181,7 +186,7 @@ fun ExerciseListItem(
 }
 
 @Composable
-private fun SetPropertyText(title: String, value: String) {
+fun SetPropertyText(title: String, value: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = title, fontSize = 12.sp)
         Text(text = value, fontSize = 12.sp)
@@ -189,7 +194,7 @@ private fun SetPropertyText(title: String, value: String) {
 }
 
 @Composable
-private fun ExerciseTextField(
+fun ExerciseTextField(
     modifier: Modifier,
     value: Int,
     title: String,
@@ -260,13 +265,13 @@ private fun ExerciseTextField(
 @Composable
 private fun ExerciseListItemPreview() {
     Column {
-        ExerciseListItem(
+        DetailedExerciseListItem(
             exercise = MockDataLayer.workouts.first().exercises.first(),
             addSet = {},
             removeSet = {},
             completeSet = {},
         )
-        ExerciseListItem(
+        DetailedExerciseListItem(
             exercise = MockDataLayer.workouts.first().exercises.first().copy(
                 sets = listOf(
                     WorkoutSet(

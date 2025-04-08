@@ -8,7 +8,10 @@ import com.app.thelocalgym.repository.WorkoutRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -20,11 +23,24 @@ class WorkoutDetailsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _workoutFlow = MutableStateFlow(Workout.default())
-    val workoutFlow = _workoutFlow.asStateFlow()
 
-    private val _viewState: MutableStateFlow<WorkoutDetailsViewState> =
-        MutableStateFlow(WorkoutDetailsViewState.Initial)
-    val viewState = _viewState.asStateFlow()
+    private val _viewState: MutableStateFlow<WorkoutDetailsOperationState> =
+        MutableStateFlow(WorkoutDetailsOperationState.Initial)
+
+    private val _listTypeState = MutableStateFlow(WorkoutListType.COMPACT)
+
+    val uiState = combine(
+        _viewState,
+        _workoutFlow,
+        _listTypeState
+    ) { view, workout, listType ->
+        WorkoutDetailsViewState(view, workout, listType)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = WorkoutDetailsViewState()
+    )
+
 
     private suspend fun getWorkout(id: String): Workout? {
         return workoutRepo.getWorkout(id)
@@ -34,7 +50,7 @@ class WorkoutDetailsViewModel @Inject constructor(
         _workoutFlow.update { workout }
     }
 
-    private fun setViewState(state: WorkoutDetailsViewState) {
+    private fun setViewState(state: WorkoutDetailsOperationState) {
         _viewState.update { state }
     }
 
@@ -42,9 +58,13 @@ class WorkoutDetailsViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) { // todo: Inject dispatcher
             getWorkout(id)?.let {
                 setWorkout(it)
-                setViewState(WorkoutDetailsViewState.Success)
-            } ?: setViewState(WorkoutDetailsViewState.Error)
+                setViewState(WorkoutDetailsOperationState.Success)
+            } ?: setViewState(WorkoutDetailsOperationState.Error)
         }
+    }
+
+    fun setListType(listType: WorkoutListType) {
+        _listTypeState.update { listType }
     }
 
     fun completeSet(id: String) {
@@ -98,10 +118,21 @@ class WorkoutDetailsViewModel @Inject constructor(
     }
 }
 
-sealed interface WorkoutDetailsViewState {
-    data object Initial : WorkoutDetailsViewState
-    data object Loading : WorkoutDetailsViewState
-    data object Success : WorkoutDetailsViewState
-    data object Error : WorkoutDetailsViewState
+sealed interface WorkoutDetailsOperationState {
+    data object Initial : WorkoutDetailsOperationState
+    data object Loading : WorkoutDetailsOperationState
+    data object Success : WorkoutDetailsOperationState
+    data object Error : WorkoutDetailsOperationState
+}
+
+data class WorkoutDetailsViewState(
+    val viewState: WorkoutDetailsOperationState = WorkoutDetailsOperationState.Initial,
+    val workout: Workout = Workout.default(),
+    val listType: WorkoutListType = WorkoutListType.COMPACT,
+)
+
+enum class WorkoutListType {
+    DETAILED,
+    COMPACT
 }
 
