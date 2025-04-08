@@ -23,14 +23,11 @@ class WorkoutDetailsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _workoutFlow = MutableStateFlow(Workout.default())
-    val workoutFlow = _workoutFlow.asStateFlow()
 
     private val _viewState: MutableStateFlow<WorkoutDetailsOperationState> =
         MutableStateFlow(WorkoutDetailsOperationState.Initial)
-    val viewState = _viewState.asStateFlow()
 
-    private val _listTypeState = MutableStateFlow(WorkoutListType.DETAILED)
-    val listTypeState = _listTypeState.asStateFlow()
+    private val _listTypeState = MutableStateFlow(WorkoutListType.COMPACT)
 
     val uiState = combine(
         _viewState,
@@ -131,7 +128,7 @@ sealed interface WorkoutDetailsOperationState {
 data class WorkoutDetailsViewState(
     val viewState: WorkoutDetailsOperationState = WorkoutDetailsOperationState.Initial,
     val workout: Workout = Workout.default(),
-    val listType: WorkoutListType = WorkoutListType.DETAILED,
+    val listType: WorkoutListType = WorkoutListType.COMPACT,
 )
 
 enum class WorkoutListType {

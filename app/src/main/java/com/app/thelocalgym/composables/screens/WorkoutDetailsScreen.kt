@@ -14,9 +14,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -30,7 +27,8 @@ import com.app.thelocalgym.R
 import com.app.thelocalgym.Workout
 import com.app.thelocalgym.composables.WorkoutDetailsOperationState
 import com.app.thelocalgym.composables.WorkoutListType
-import com.app.thelocalgym.composables.generics.ExerciseListItem
+import com.app.thelocalgym.composables.generics.CompactExerciseListItem
+import com.app.thelocalgym.composables.generics.DetailedExerciseListItem
 import com.app.thelocalgym.composables.generics.TopBar
 import com.app.thelocalgym.repository.MockDataLayer
 
@@ -57,7 +55,9 @@ fun WorkoutDetailsScreen(
             LazyColumn(modifier = Modifier.padding(padding)) {
                 item {
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 15.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
@@ -71,12 +71,19 @@ fun WorkoutDetailsScreen(
                     }
                 }
                 items(items = workout.exercises, key = { it.id }) {
-                    ExerciseListItem(
-                        exercise = it,
-                        addSet = addSet,
-                        removeSet = removeSet,
-                        completeSet = completeSet,
-                    )
+                    if (listType == WorkoutListType.DETAILED) {
+                        DetailedExerciseListItem(
+                            exercise = it,
+                            addSet = addSet,
+                            removeSet = removeSet,
+                            completeSet = completeSet,
+                        )
+                    } else {
+                        CompactExerciseListItem(
+                            exercise = it,
+                            set = it.sets.first() // todo: not safe
+                        )
+                    }
                 }
             }
         }
@@ -87,7 +94,7 @@ fun WorkoutDetailsScreen(
 fun ListTypeIcon(
     listType: WorkoutListType,
     setListType: (WorkoutListType) -> Unit
-    ) {
+) {
     Row(
         modifier = Modifier.clickable {
             val newValue = if (listType == WorkoutListType.DETAILED) {
@@ -109,13 +116,17 @@ fun ListTypeIcon(
         )
         if (listType == WorkoutListType.DETAILED) {
             Icon(
-                modifier = Modifier.padding(5.dp).size(20.dp),
+                modifier = Modifier
+                    .padding(5.dp)
+                    .size(20.dp),
                 painter = painterResource(R.drawable.format_list_numbered_24px),
                 contentDescription = "Detailed list icon"
             )
         } else {
             Icon(
-                modifier = Modifier.padding(5.dp).size(20.dp),
+                modifier = Modifier
+                    .padding(5.dp)
+                    .size(20.dp),
                 imageVector = Icons.Default.Menu,
                 contentDescription = "Compact list icon"
             )
