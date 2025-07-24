@@ -6,8 +6,8 @@ import com.app.thelocalgym.Workout
 import com.app.thelocalgym.WorkoutSet
 import java.util.UUID
 
-object MockDataLayer { // TODO: Create repository and mock getters and setters
-    val workouts = listOf(
+object MockDataLayer {
+    val workouts = mutableListOf(
         Workout(
             id = UUID.randomUUID().toString(),
             name = "Push 1",
